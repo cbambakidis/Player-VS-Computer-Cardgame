@@ -12,13 +12,15 @@ public class Player {
         return isPlayer;
     }
     public Player(ArrayList<Card> startingHand){
-        hand = startingHand;
+        this.hand = startingHand;
+        System.out.println(hand);
     }
 
     public void makeMove(Deck drawPile, Stack<Card> discardPile){
         System.out.println("Your cards:");
-        for(Card N : hand){
+        for(Card N : this.hand){
             System.out.println("* " + N.toString());
+            
         }
         if(discardPile.peek() != null){
             System.out.println("The card on top of the discard pile is " + discardPile.peek().toString());
@@ -50,7 +52,16 @@ public class Player {
                 hand.remove(i);
             }
         }
-        
-        //prompt user for choice. Make move based on input.
+        //check if i have 4 cards of the same number.
+        int numberOfLikeCard = 0;
+        for (int i=0; i<hand.size(); i++){
+            if(hand.get(i).getValue() == hand.get(i+1).getValue()){
+                numberOfLikeCard++;
+            }
+        }
+        if(numberOfLikeCard == 4){
+            System.out.println("You win!");
+            System.exit(0);
+        }
     }
 }

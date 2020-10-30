@@ -16,11 +16,12 @@ public class Game extends ArrayList<Player> {
             this.add(X);
         }
         ArrayList<Card>playerHand = new ArrayList<>();
-        for (int i=0; i<5; i++){
+        for (int i=0; i<4; i++){
             playerHand.add(drawPile.pop());
         }
         Player D = new Player(playerHand);
         this.add(D);
+
         while(!isGameOver){
             for(Player X : this){
                 X.makeMove(drawPile, discardPile);

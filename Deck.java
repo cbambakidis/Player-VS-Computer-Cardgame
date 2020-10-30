@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.Stack;
 
 public class Deck extends Stack<Card> {
@@ -5,7 +6,7 @@ public class Deck extends Stack<Card> {
 
     public Deck() {
         //Make new stack of 52 cards. Shuffle either here or main method.
-        for (int i=0; i<13; i++){
+        for (int i=1; i<13; i++){
             Card A = new Card(i, 1);
             Card B = new Card(i, 2);
             Card C = new Card(i, 3);
@@ -18,6 +19,6 @@ public class Deck extends Stack<Card> {
     }
 
     public void shuffle(){
-        this.shuffle();
+        Collections.shuffle(this);
     }
 }
