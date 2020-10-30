@@ -4,12 +4,12 @@ import java.util.Stack;
 public class Game extends ArrayList<Player> {
     private Stack<Card> discardPile;
     private Deck drawPile = new Deck();
+    private boolean isGameOver = false;
     public Game(int numberOfPlayers) {
         drawPile.shuffle();
-        
         for (int i = 0; i < numberOfPlayers; i++) {
             ArrayList<Card> startingHand = new ArrayList<>();
-            for (int d=0; d<5; d++){
+            for (int d=0; d<4; d++){
                 startingHand.add(drawPile.pop());
             }
             Opponent X = new Opponent(startingHand);
@@ -19,8 +19,15 @@ public class Game extends ArrayList<Player> {
         for (int i=0; i<5; i++){
             playerHand.add(drawPile.pop());
         }
-        Player X = new Player(playerHand);
-        this.add(X);
+        Player D = new Player(playerHand);
+        this.add(D);
+        while(!isGameOver){
+            for(Player X : this){
+                X.makeMove(drawPile, discardPile);
+            }
+        }
     }
+
+
 
 }

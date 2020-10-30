@@ -29,7 +29,7 @@ int kings;
 
 
     //Hand will have cards the opponent won't want to play. MakeMove should figure this out.
-    public void makeMove(Stack<Card> drawPile, Stack<Card> discardPile){
+    public void makeMove(Deck drawPile, Stack<Card> discardPile){
         Card idealCard;
  
 
