@@ -3,7 +3,7 @@ public class Card {
     private int value;
     // This method for organizing card suit and value inspired by Alisa on
     // stackoverflow.
-    private String[] values = {null,"Ace", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+    private String[] values = { null, "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
             "Jack", "Queen", "King" };
     private String[] cardSuits = { null, "Clubs", "Hearts", "Diamonds", "Spades" };
 

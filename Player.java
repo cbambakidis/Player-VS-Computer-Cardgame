@@ -43,33 +43,29 @@ public class Player {
 
         System.out.println("Now your cards are:");
         for (int i = 0; i < hand.size(); i++) {
-            System.out.println(i + ": " + hand.get(i).toString());
+            System.out.println((i + 1) + ": " + hand.get(i).toString());
 
         }
-        System.out.print("Which one would you like to discard? (0-5) ");
-        int discardChoice = in.nextInt();
+        System.out.print("Which one would you like to discard? (1-5) ");
+        int discardChoice = in.nextInt() - 1;
         for (int i = 0; i < hand.size(); i++) {
             if (i == discardChoice) {
                 hand.remove(i);
             }
         }
-        // check if i have 4 cards of the same number.
-        int num = 0;
-        Card X = new Card();
-        for (int i=0; i<hand.size(); i++){
-            if(hand.get(i) == X){
-                num++;
-            }
-            X = hand.get(i);
-        }
-        int numberOfLikeCard = 0;
-        for (int i = 0; i < hand.size()-1; i++) {
+        checkWinStatus();
+
+    }
+
+    public void checkWinStatus() {
+        int numberOfLikeCard = 1;
+        for (int i = 0; i < hand.size() - 1; i++) {
             if (hand.get(i).getValue() == hand.get(i + 1).getValue()) {
                 numberOfLikeCard++;
             }
         }
-        if (num == 4) {
-            System.out.println("You win!");
+        if (numberOfLikeCard == 4) {
+            System.out.println("I win!");
             System.exit(0);
         }
     }

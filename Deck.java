@@ -16,9 +16,16 @@ public class Deck extends Stack<Card> {
             this.add(C);
             this.add(D);
         }
+        shuffle();
     }
-
+    
+    //Idea for shuffle method adapted from Hobart and William Smith Colleges.
     public void shuffle(){
-        Collections.shuffle(this);
+            for ( int i = this.size()-1; i > 0; i--) {
+                int rand = (int)(Math.random()*(i+1));
+                Card temp = this.get(i);
+                this.set(i, this.get(rand));
+                this.set(rand, temp);
+            }        
     }
 }
