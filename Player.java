@@ -50,6 +50,7 @@ public class Player {
         int discardChoice = in.nextInt() - 1;
         for (int i = 0; i < hand.size(); i++) {
             if (i == discardChoice) {
+                discardPile.push(hand.get(i));
                 hand.remove(i);
             }
         }
