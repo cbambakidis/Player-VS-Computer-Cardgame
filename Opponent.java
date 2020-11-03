@@ -10,14 +10,29 @@ public class Opponent extends Player {
     private int[] topCard;
     private int[] nextTopCard;
     private int secondChoiceValue;
+    private Stack<Card> discardPile;
     private int secondChoiceQuantity;
     private ArrayList<Card> handWithoutBestCard = new ArrayList<Card>();
 
-    public Opponent(ArrayList<Card> startingHand) {
+    public Opponent(ArrayList<Card> startingHand, Stack<Card> discardPile) {
         this.hand = startingHand;
+        this.discardPile = discardPile;
     }
 
     public void makeMove(Deck drawPile, Stack<Card> discardPile) {
+        //If the quantity of ideal cards is 3 or greater, discard whatever isn't ideal, regardless of if it's second ideal.
+        //second ideal only counts if you have 2 of 2 different kinds of cards, leaving one card with least quantity.
+        //This is the card you want to discard.
+        //If we have a second ideal and the discard pile contains it during the draw phase
+        //Draw phase: 4 cards in hand currently. 
+        //Draw phase - ideal card, no second ideal. Draw ideal if it's in discard, otherwise draw pile.
+        //Draw phase - no ideal card, no second ideal. Check discard for match, otherwise draw pile.
+        //Draw phase - ideal card, second ideal card (so 2 of each). Check discard for match for either, otherwise draw pile 
+        //Discard phase: 5 cards in hand currently. Recheck ideal and non ideal:
+        //Discard phase - ideal card, no second ideal. get rid of card of least amount.
+        //Discard phase - no ideal card, no second ideal. get rid of card of least amount.
+        //Discard phase - ideal card, second ideal card(2 of one, 3 of the other). get rid of one of least amount.
+        
         //For draw, if discard matches either ideal card, draw it.
         //For discard, discard card we have least of.
 
@@ -35,7 +50,7 @@ public class Opponent extends Player {
             System.out.println("Ideal card pre draw: " + idealCardValue);
         }
 
-
+        handWithoutBestCard.clear();
         //If we have an idea, check for second ideal. Mark true if we have one, false if we don't.
         if(hasIdealCard){
         handWithoutBestCard.addAll(hand);
@@ -96,8 +111,6 @@ public class Opponent extends Player {
             hasIdealCard = false;
         } else {
             hasIdealCard = true;
-            System.out.println(hand);
-            System.out.println("Ideal card: " + idealCardValue + ", " + idealCardQuantity);
         }
         handWithoutBestCard.clear();
         if(hasIdealCard){
@@ -117,9 +130,11 @@ public class Opponent extends Player {
                 hasNextIdeal = false;
             } else {
                 hasNextIdeal = true;
-                System.out.println("Next ideal: " + secondChoiceValue + " " + secondChoiceQuantity);
             }
         }
+        Discard();
+        checkWinStatus();
+    }
 
         // At this point, in discard phase, this is to make sure opponent doesn't
         // discard card he has more of 1 of.
@@ -138,13 +153,14 @@ public class Opponent extends Player {
         /*
             *Discard Phase*
         */
+        public void Discard() {          
         if (!hasIdealCard) {
             discardPile.add(hand.get(2));
             hand.remove(2);
             return;
         }
 
-        else if (hasIdealCard) {
+        if (hasIdealCard && !hasNextIdeal){
             for (Card N : hand) {
                 if (N.getValue() != idealCardValue) {
                     discardPile.add(N);
@@ -153,9 +169,28 @@ public class Opponent extends Player {
                 }
             }
         }
+        //If we have 3 idealcards, and 2 second ideals, discard a second ideal, or anything non ideal.
+        //If we have 2 ideal, 2 second ideal, discard the one non ideal.
+        if(hasIdealCard && hasNextIdeal && idealCardQuantity == 2){
+            for(Card N: hand){
+                if(N.getValue() != idealCardValue && N.getValue() != secondChoiceValue){
+                    discardPile.add(N);
+                    hand.remove(N);
+                    return;
+                }
+            }
+        }
 
+        if(hasIdealCard && hasNextIdeal && idealCardQuantity == 3){
+            for(Card N : hand){
+                if(N.getValue() != idealCardValue){
+                    discardPile.add(N);
+                    hand.remove(N);
+                    return;
+                }
+            }
+        }
     }
-
     public void checkWinStatus() {
         int numberOfLikeCard = 1;
         for (int i = 0; i < hand.size() - 1; i++) {

@@ -20,7 +20,7 @@ public class Game extends ArrayList<Player> {
             for (int d = 0; d < 4; d++) {
                 startingHand.add(drawPile.pop());
             }
-            Player X = new Opponent(startingHand);
+            Player X = new Opponent(startingHand, discardPile);
             this.add(X);
         }
         while (!isGameOver) {
