@@ -13,29 +13,15 @@ public class Opponent extends Player {
     private Stack<Card> discardPile;
     private int secondChoiceQuantity;
     private ArrayList<Card> handWithoutBestCard = new ArrayList<Card>();
+    private int playerNumber;
 
-    public Opponent(ArrayList<Card> startingHand, Stack<Card> discardPile) {
+    public Opponent(ArrayList<Card> startingHand, Stack<Card> discardPile, int playerNumber) {
         this.hand = startingHand;
         this.discardPile = discardPile;
+        this.playerNumber = playerNumber;
     }
 
     public void makeMove(Deck drawPile, Stack<Card> discardPile) {
-        //If the quantity of ideal cards is 3 or greater, discard whatever isn't ideal, regardless of if it's second ideal.
-        //second ideal only counts if you have 2 of 2 different kinds of cards, leaving one card with least quantity.
-        //This is the card you want to discard.
-        //If we have a second ideal and the discard pile contains it during the draw phase
-        //Draw phase: 4 cards in hand currently. 
-        //Draw phase - ideal card, no second ideal. Draw ideal if it's in discard, otherwise draw pile.
-        //Draw phase - no ideal card, no second ideal. Check discard for match, otherwise draw pile.
-        //Draw phase - ideal card, second ideal card (so 2 of each). Check discard for match for either, otherwise draw pile 
-        //Discard phase: 5 cards in hand currently. Recheck ideal and non ideal:
-        //Discard phase - ideal card, no second ideal. get rid of card of least amount.
-        //Discard phase - no ideal card, no second ideal. get rid of card of least amount.
-        //Discard phase - ideal card, second ideal card(2 of one, 3 of the other). get rid of one of least amount.
-        
-        //For draw, if discard matches either ideal card, draw it.
-        //For discard, discard card we have least of.
-
         // See if we have more than one of a kind of card.
         topCard = count(hand);
         idealCardValue = topCard[2];
@@ -199,7 +185,7 @@ public class Opponent extends Player {
             }
         }
         if (numberOfLikeCard == 4) {
-            System.out.println("I win!");
+            System.out.println("Player " + playerNumber + " wins!");
             System.exit(0);
         }
     }

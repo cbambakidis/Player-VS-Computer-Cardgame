@@ -28,7 +28,7 @@ public class Player {
             System.out.println("The card on top of the discard pile is " + discardPile.peek().toString());
             System.out.println(
                     "Do you want to pick up the " + discardPile.peek().toString() + "(1) or draw from the deck (2)?");
-            int choice = in.nextInt();
+            int choice = getSanitizedInput(1,2);
             if (choice == 1) {
                 hand.add(discardPile.pop());
             } else if (choice == 2) {
@@ -44,10 +44,9 @@ public class Player {
         System.out.println("Now your cards are:");
         for (int i = 0; i < hand.size(); i++) {
             System.out.println((i + 1) + ": " + hand.get(i).toString());
-
         }
         System.out.print("Which one would you like to discard? (1-5) ");
-        int discardChoice = in.nextInt() - 1;
+        int discardChoice = getSanitizedInput(1, 5) - 1;
         for (int i = 0; i < hand.size(); i++) {
             if (i == discardChoice) {
                 discardPile.push(hand.get(i));
@@ -55,7 +54,26 @@ public class Player {
             }
         }
         checkWinStatus();
+    }
 
+    private int getSanitizedInput(int leftBound, int rightBound){
+        int returnValue = 0;
+        boolean hasInput = false;
+        while (!hasInput) {
+            String input = in.next();
+            try {
+                 returnValue = Integer.parseInt(input);
+                if (returnValue <= rightBound && returnValue >= leftBound) {
+                    hasInput = true;
+                }
+                else{
+                    System.out.println("Please enter a number between " + leftBound + " and " + rightBound);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter an integer.");
+            }
+        }
+        return returnValue;
     }
 
     public void checkWinStatus() {

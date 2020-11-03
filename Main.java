@@ -1,9 +1,27 @@
 import java.util.Scanner;
-class Main{
-    public static void main(String[] args){
-        // Scanner in = new Scanner(System.in);
-        // System.out.println("Please enter the number of other player: (1-3):");
-        //int numPlayers = in.nextInt();
-        new Game(1);
+
+class Main {
+    public static void main(String[] args) {
+        Scanner keyboard = new Scanner(System.in);
+        boolean hasInput = false;
+        int numPlayers = 0;
+
+        while (!hasInput) {
+            System.out.print("Enter the number of players: ");
+            String input = keyboard.next();
+            try {
+                 numPlayers = Integer.parseInt(input);
+                if (numPlayers <=3 && numPlayers > 0) {
+                    hasInput = true;
+                }
+                else{
+                    System.out.println("Please enter a number between 1 and 3. ");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter an integer.");
+            }
+        }
+        new Game(numPlayers);
+        keyboard.close();
     }
 }
