@@ -6,7 +6,8 @@ import java.util.Scanner;
 */
 class Main {
     /*
-    - This is a java version of the card game "Spoons".
+    * This is a java version of the card game "Spoons".
+    * Players take turns drawing and discarding. First player with 4 cards of the same value wins.
     */
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
