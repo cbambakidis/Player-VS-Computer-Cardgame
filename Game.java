@@ -33,6 +33,11 @@ public class Game extends ArrayList<Player> {
 
         while (!isGameOver) {
             for (Player X : this) {
+                if(drawPile.size() == 0){ //If we run out of cards in the deck, add discard cards. This happened one time during testing.
+                    drawPile.addAll(discardPile);
+                    discardPile.clear();
+                    discardPile.push(drawPile.pop());
+                }
                 X.makeMove();
                 System.out.println();
             }

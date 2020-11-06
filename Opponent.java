@@ -136,7 +136,7 @@ public class Opponent extends Player {
     private void discard() {
         if (!hasIdealCard) {
             System.out.println("I will discard the " + hand.get(2).toString() + ".");
-            discardPile.add(hand.get(2));
+            discardPile.push(hand.get(2));
             hand.remove(2);
             return;
         }
@@ -145,7 +145,7 @@ public class Opponent extends Player {
             for (Card N : hand) {
                 if (N.getValue() != idealCardValue) {
                     System.out.println("Player " + playerNumber + " discards the " + N.toString() + " from his hand.");
-                    discardPile.add(N);
+                    discardPile.push(N);
                     hand.remove(N);
                     return;
                 }
@@ -178,7 +178,7 @@ public class Opponent extends Player {
     }
 
     // Same as player class, but with different message.
-    public void checkWinStatus() {
+    private void checkWinStatus() {
         int numberOfLikeCard = 1;
         for (int i = 0; i < hand.size() - 1; i++) {
             if (hand.get(i).getValue() == hand.get(i + 1).getValue()) {
@@ -193,7 +193,7 @@ public class Opponent extends Player {
 
     // Learned about hashmaps after had already finished making this method :(
     // I know it's clunky but it works.
-    public int[] count(ArrayList<Card> X) {
+    private int[] count(ArrayList<Card> X) {
         // Convert given hand into an array of card values.
         int[] indexQuantityAndValue = new int[6];
         int[] cardValues = new int[5];
