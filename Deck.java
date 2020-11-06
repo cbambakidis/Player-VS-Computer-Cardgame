@@ -1,6 +1,5 @@
-import java.util.Collections;
 import java.util.Stack;
-
+//This class is basically a stack of cards with a shuffle method.
 public class Deck extends Stack<Card> {
     private static final long serialVersionUID = 1L;
 

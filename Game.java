@@ -2,16 +2,23 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class Game extends ArrayList<Player> {
+    private static final long serialVersionUID = 1L;
     private Stack<Card> discardPile = new Stack<>();
     private Deck drawPile = new Deck();
     private boolean isGameOver = false;
+
+    /*
+    * Constructs a new Game with the number of players obtained in main class.
+    * Makes all opponents then a player object.
+    * Makes new Deck and deals starting cards.
+    */
 
     public Game(int numberOfPlayers) {
         ArrayList<Card> playerHand = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             playerHand.add(drawPile.pop());
         }
-        Player D = new Player(playerHand);
+        Player D = new Player(playerHand, drawPile, discardPile);
         this.add(D);
 
         drawPile.shuffle();
@@ -20,13 +27,13 @@ public class Game extends ArrayList<Player> {
             for (int d = 0; d < 4; d++) {
                 startingHand.add(drawPile.pop());
             }
-            Player X = new Opponent(startingHand, discardPile, i+1);
+            Player X = new Opponent(startingHand, discardPile, drawPile, i + 1);
             this.add(X);
         }
+
         while (!isGameOver) {
             for (Player X : this) {
-                System.out.println();
-                X.makeMove(drawPile, discardPile);
+                X.makeMove();
                 System.out.println();
             }
         }

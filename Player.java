@@ -4,21 +4,21 @@ import java.util.Scanner;
 
 public class Player {
     private ArrayList<Card> hand;
-    private boolean isPlayer = true;
     private Scanner in = new Scanner(System.in);
+    private Stack<Card> discardPile;
+    private Deck drawPile;
 
     public Player() {
     }
 
-    public boolean isPlayer() {
-        return isPlayer;
-    }
-
-    public Player(ArrayList<Card> startingHand) {
+    public Player(ArrayList<Card> startingHand, Deck drawPile, Stack<Card>discardPile) {
         this.hand = startingHand;
+        this.discardPile = discardPile;
+        this.drawPile = drawPile;
     }
 
-    public void makeMove(Deck drawPile, Stack<Card> discardPile) {
+    //Print the players cards, move based on their choice.
+    public void makeMove() {
         System.out.println("Your cards:");
         for (Card N : this.hand) {
             System.out.println("* " + N.toString());
@@ -56,6 +56,7 @@ public class Player {
         checkWinStatus();
     }
 
+    //Gets sanitized user input for moves.
     private int getSanitizedInput(int leftBound, int rightBound){
         int returnValue = 0;
         boolean hasInput = false;
@@ -70,13 +71,14 @@ public class Player {
                     System.out.println("Please enter a number between " + leftBound + " and " + rightBound);
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Please enter an integer.");
+                System.out.println("Please enter a valid integer.");
             }
         }
         return returnValue;
     }
 
-    public void checkWinStatus() {
+    //If we have 4 cards of the same number, we win!
+    private void checkWinStatus() {
         int numberOfLikeCard = 1;
         for (int i = 0; i < hand.size() - 1; i++) {
             if (hand.get(i).getValue() == hand.get(i + 1).getValue()) {

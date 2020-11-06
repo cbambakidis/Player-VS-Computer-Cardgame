@@ -14,15 +14,21 @@ public class Opponent extends Player {
     private int secondChoiceQuantity;
     private ArrayList<Card> handWithoutBestCard = new ArrayList<Card>();
     private int playerNumber;
+    private Deck drawPile;
 
-    public Opponent(ArrayList<Card> startingHand, Stack<Card> discardPile, int playerNumber) {
+    /*
+     * Constructs new opponent with hand, discard pile access and a player number
+     * for when they win.
+     */
+    public Opponent(ArrayList<Card> startingHand, Stack<Card> discardPile, Deck drawPile, int playerNumber) {
         this.hand = startingHand;
         this.discardPile = discardPile;
         this.playerNumber = playerNumber;
+        this.drawPile = drawPile;
     }
 
-    public void makeMove(Deck drawPile, Stack<Card> discardPile) {
-        // See if we have more than one of a kind of card.
+    public void makeMove() {
+        // See if we have more than one of a kind of card, using Count() method.
         topCard = count(hand);
         idealCardValue = topCard[2];
         idealCardQuantity = topCard[1];
@@ -33,36 +39,32 @@ public class Opponent extends Player {
             hasNextIdeal = false;
         } else {
             hasIdealCard = true;
-            System.out.println("Ideal card pre draw: " + idealCardValue);
         }
 
         handWithoutBestCard.clear();
-        //If we have an idea, check for second ideal. Mark true if we have one, false if we don't.
-        if(hasIdealCard){
-        handWithoutBestCard.addAll(hand);
+
+        // If we have more than one card of a kind, check for second ideal. Mark true if
+        // we have one, false if we don't.
+        if (hasIdealCard) {
+            handWithoutBestCard.addAll(hand);
             for (Card D : hand) {
                 if (D.getValue() == idealCardValue) {
                     handWithoutBestCard.remove(D);
                 }
             }
-        
 
-        nextTopCard = count(handWithoutBestCard);
-        secondChoiceValue = nextTopCard[2];
-        secondChoiceQuantity = nextTopCard[1];
+            nextTopCard = count(handWithoutBestCard);
+            secondChoiceValue = nextTopCard[2];
+            secondChoiceQuantity = nextTopCard[1];
 
-        if (secondChoiceQuantity <= 1) {
-            hasNextIdeal = false;
-            System.out.println("No second ideal.");
-        } else {
-            hasNextIdeal = true;
-            System.out.println("Next ideal: " + secondChoiceValue + " " + secondChoiceQuantity);
+            if (secondChoiceQuantity <= 1) {
+                hasNextIdeal = false;
+            } else {
+                hasNextIdeal = true;
+            }
         }
-    }
-
 
         // Check if the discard pile has a matching card, to any card in our hand.
-        System.out.println("Discard pile: " + discardPile.peek().getValue());
         boolean discardHasMatchingCard = false;
         if (!discardPile.empty()) {
             for (Card N : hand) {
@@ -75,91 +77,87 @@ public class Opponent extends Player {
 
         // If discard pile has any card I have, take it.
         if (discardHasMatchingCard) {
+            System.out.println("Player " + playerNumber + " draws the " + discardPile.peek().toString()
+                    + " from the discard pile.");
             hand.add(discardPile.peek());
-            System.out.println("Opponent took " + discardPile.peek() + " from discard.");
             discardPile.pop();
         }
         // If not, we draw from the pile.
         else {
-            System.out.println("Opponent drew " + drawPile.peek() + " from draw pile.");
+            System.out.println("Player " + playerNumber + " draws from the draw pile.");
             hand.add(drawPile.pop());
         }
 
         checkWinStatus();
-
-        // With our new hand, we reasses and see if we have more than one of a kind of
+        // With our new hand, we re assess and see if we have more than one of a kind of
         // card.
         topCard = count(hand);
         idealCardValue = topCard[2];
         idealCardQuantity = topCard[1];
-
+        //If we have more than one of a card, we have an ideal card, i.e a card we should get more of to win.
         if (idealCardQuantity <= 1) {
             hasIdealCard = false;
         } else {
             hasIdealCard = true;
         }
+
+        /* 
+         *Create a hypothetical second hand, without the ideal card, to determine if we
+         * have any other cards of a kind.
+         * I just remove the ideal cards and run it through my count method again.
+
+        */ 
         handWithoutBestCard.clear();
-        if(hasIdealCard){
+        if (hasIdealCard) {
             handWithoutBestCard.addAll(hand);
-                for (Card D : hand) {
-                    if (D.getValue() == idealCardValue) {
-                        handWithoutBestCard.remove(D);
-                    }
+            for (Card D : hand) {
+                if (D.getValue() == idealCardValue) {
+                    handWithoutBestCard.remove(D);
                 }
-            
-    
+            }
             nextTopCard = count(handWithoutBestCard);
             secondChoiceValue = nextTopCard[2];
             secondChoiceQuantity = nextTopCard[1];
-    
             if (secondChoiceQuantity <= 1) {
                 hasNextIdeal = false;
             } else {
                 hasNextIdeal = true;
             }
         }
-        Discard();
+        // We know should know if we have any cards worth keeping, so discard.
+        discard();
+        // And check if I win.
         checkWinStatus();
     }
 
-        // At this point, in discard phase, this is to make sure opponent doesn't
-        // discard card he has more of 1 of.
-        // In draw phase, it will be compared to discard pile so he knows if he should
-        // draw from it.
-
-        /*
-         * Also check if has next ideal card, indexed in 4,5 and 6. If neither in deck,
-         * draw pile. If discard has either type of ideal card, draw it and discard card
-         * i have least of. Add user input safety.
-         */
-
-        // Doesn't matter what we discard if we don't have more than 1 card of a kind.
-        // If he doesn't have an ideal card, he won't have a second ideal card.
-
-        /*
-            *Discard Phase*
-        */
-        public void Discard() {          
+    // This method Discards a card from the opponents hand, after calculating
+    // whether or not
+    // He has any cards worth keeping.
+    private void discard() {
         if (!hasIdealCard) {
+            System.out.println("I will discard the " + hand.get(2).toString() + ".");
             discardPile.add(hand.get(2));
             hand.remove(2);
             return;
         }
 
-        if (hasIdealCard && !hasNextIdeal){
+        if (hasIdealCard && !hasNextIdeal) {
             for (Card N : hand) {
                 if (N.getValue() != idealCardValue) {
+                    System.out.println("Player " + playerNumber + " discards the " + N.toString() + " from his hand.");
                     discardPile.add(N);
                     hand.remove(N);
                     return;
                 }
             }
         }
-        //If we have 3 idealcards, and 2 second ideals, discard a second ideal, or anything non ideal.
-        //If we have 2 ideal, 2 second ideal, discard the one non ideal.
-        if(hasIdealCard && hasNextIdeal && idealCardQuantity == 2){
-            for(Card N: hand){
-                if(N.getValue() != idealCardValue && N.getValue() != secondChoiceValue){
+        // If we have 3 ideal cards, and 2 second ideals, discard a second ideal, or
+        // anything non ideal.
+        // If we have 2 ideal, 2 second ideal, discard the remaining non ideal.
+        if (hasIdealCard && hasNextIdeal && idealCardQuantity == 2) {
+            for (Card N : hand) {
+                if (N.getValue() != idealCardValue && N.getValue() != secondChoiceValue) {
+                    System.out.println("Player " + playerNumber + " discards the " + N.toString() + " from his hand.");
                     discardPile.add(N);
                     hand.remove(N);
                     return;
@@ -167,9 +165,10 @@ public class Opponent extends Player {
             }
         }
 
-        if(hasIdealCard && hasNextIdeal && idealCardQuantity == 3){
-            for(Card N : hand){
-                if(N.getValue() != idealCardValue){
+        if (hasIdealCard && hasNextIdeal && idealCardQuantity == 3) {
+            for (Card N : hand) {
+                if (N.getValue() != idealCardValue) {
+                    System.out.println("Player " + playerNumber + " discards the " + N.toString() + " from his hand.");
                     discardPile.add(N);
                     hand.remove(N);
                     return;
@@ -177,6 +176,8 @@ public class Opponent extends Player {
             }
         }
     }
+
+    // Same as player class, but with different message.
     public void checkWinStatus() {
         int numberOfLikeCard = 1;
         for (int i = 0; i < hand.size() - 1; i++) {
@@ -190,13 +191,18 @@ public class Opponent extends Player {
         }
     }
 
+    // Learned about hashmaps after had already finished making this method :(
+    // I know it's clunky but it works.
     public int[] count(ArrayList<Card> X) {
+        // Convert given hand into an array of card values.
         int[] indexQuantityAndValue = new int[6];
         int[] cardValues = new int[5];
         for (int i = 0; i < X.size(); i++) {
             cardValues[i] = X.get(i).getValue();
         }
-
+        // Make an array to represent total quantities of each corresponding card.
+        // Iterate and add 1 to corresponding positon in numTotal array if we have an
+        // instance of that card.
         int[] numTotal = { 0, 0, 0, 0, 0 };
         for (int i = 0; i < X.size(); i++) {
             if (X.get(i).getValue() == cardValues[0]) {
@@ -215,15 +221,18 @@ public class Opponent extends Player {
                 numTotal[4]++;
             }
         }
-        System.out.println("Card quantities: " + Arrays.toString(numTotal));
-        System.out.println("Card values: " + Arrays.toString(cardValues));
+        // Now, find which position in numTotals has the biggest number i.e quantity of
+        // cards.
         int biggestIndex = 0;
         for (int i = 0; i < numTotal.length; i++) {
             if (numTotal[i] > numTotal[biggestIndex]) {
                 biggestIndex = i;
             }
         }
-
+        // Then we match that index with the corresponding index in the original values
+        // array.
+        // And return an array containing the index of the largest card, number of that
+        // card, and the card value.
         indexQuantityAndValue[0] = biggestIndex;
         indexQuantityAndValue[1] = numTotal[biggestIndex];
         indexQuantityAndValue[2] = cardValues[biggestIndex];

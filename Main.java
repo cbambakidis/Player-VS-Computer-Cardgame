@@ -1,11 +1,17 @@
 import java.util.Scanner;
-
+/*
+- @author cbambakidis
+- 1181 Project 4
+- Cheatham, Fall 2020 
+*/
 class Main {
+    /*
+    - This is a java version of the card game "Spoons".
+    */
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
         boolean hasInput = false;
         int numPlayers = 0;
-
         while (!hasInput) {
             System.out.print("Enter the number of players: ");
             String input = keyboard.next();
